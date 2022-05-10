@@ -39,7 +39,19 @@ public class GeographyController {
 
 		return ResponseEntity.ok(departments);
 	}
-	
+
+	@GetMapping(value="/{id}")
+	public ResponseEntity<City> GetCityById(
+			@RequestParam (name="id", required = true) Long id)
+	{
+		City city = geographyService.getCityById(id);
+		if (city == null) {
+			return ResponseEntity.noContent().build();
+		}
+
+		return ResponseEntity.ok(city);
+	}
+
 	@CrossOrigin(origins = "*")
 	@PostMapping
 	public ResponseEntity<City> createCity(
@@ -58,6 +70,6 @@ public class GeographyController {
 			)
 	{
 		City cityCreated = geographyService.updateCity(newCity);
-		return ResponseEntity.status(HttpStatus.CREATED).body(cityCreated);
+		return ResponseEntity.status(HttpStatus.OK).body(cityCreated);
 	}
 }

@@ -20,7 +20,7 @@ public class PersonService implements IPersonService {
 	
 	@Override
 	public Person getById(Long id) {
-		return personRepository.getById(id);
+		return personRepository.findById(id).orElse(null);
 	}
 	
 	

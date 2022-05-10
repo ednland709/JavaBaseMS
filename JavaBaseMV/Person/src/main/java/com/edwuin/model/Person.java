@@ -2,7 +2,12 @@ package com.edwuin.model;
 
 import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -41,4 +46,7 @@ public class Person {
 	private String email;
 	
 	private String password;
+	
+	@Transient
+	private City city;
 }
