@@ -1,5 +1,7 @@
 package com.edwuin.model;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 
 import lombok.*;
@@ -7,7 +9,7 @@ import lombok.*;
 @Entity
 @Table
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
-public class Department {
+public class Department implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

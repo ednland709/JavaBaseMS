@@ -12,7 +12,7 @@ import com.edwuin.repository.IDepartmentRepository;
 
 @Service
 public class GeographyService implements IGeographyService {
-	//@Autowired
+	@Autowired
 	private ICityRepository cityRepository;
 	
 	@Autowired

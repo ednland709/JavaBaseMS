@@ -3,6 +3,7 @@ package com.edwuin.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,34 +42,65 @@ public class PersonController {
 	@GetMapping(value="/{id}")
 	public ResponseEntity<Person> getById(@PathVariable("id") Long id) {
 		Person person = personService.getById(id);
-		person.setCity(getCityById(person.getIdCity()));
 		
-		if (person == 	null) {
+		if (person == null) {
 			return ResponseEntity.noContent().build();
 		}
 
+		person.setCity(getCityById(person.getIdCity()));
+		
 		return ResponseEntity.ok(person);
 	}
+	
 	@PostMapping
 	public Person createPerson(@RequestBody Person person) {
 		return personService.mergePerson(person);
 	}
+	
 	@PutMapping(value="/{id}")
 	public Person updatePerson(@PathVariable("id") Long id, @RequestBody Person person) {
 		person.setId(id);
 		return personService.mergePerson(person);
 	}
+	
 	@DeleteMapping(value="/{id}")
 	public void deletePerson(@PathVariable("id") Long id) {
 		personService.deletePerson(id);
 	}
 	
-	@CircuitBreaker(name = "myInstance", fallbackMethod = "fallbackCity")
+	@CircuitBreaker(name = "fastrequest", fallbackMethod = "fallbackCity")
 	private City getCityById(Long id) {
-		return geographyclient.GetCityById(id);
-	}
-	
-	private City fallbackCity() {
+		try {
+		City city = geographyclient.GetCityById(id);
+		return city;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
+	
+	private ResponseEntity<City> fallbackCity(
+			Long id, RuntimeException exeption ) {
+		return new ResponseEntity("No data in service", HttpStatus.OK);
+	}
+	
+	@GetMapping(value="/city/{id}")
+	@CircuitBreaker(name = "fastrequest", fallbackMethod = "fallbackCity2")
+	public ResponseEntity<City> getCityByRestId(@PathVariable("id") Long id) {
+		City city = geographyclient.GetCityById(id);;
+		
+		if (city == null) {
+			return ResponseEntity.noContent().build();
+		}
+		
+		return ResponseEntity.ok(city);
+	}
+	
+	private ResponseEntity<City> fallbackCity2(
+			@PathVariable("id") Long id, RuntimeException exeption ) {
+		return new ResponseEntity("No data in service", HttpStatus.OK);
+	}
+	
+	
+
 }

@@ -40,9 +40,9 @@ public class GeographyController {
 		return ResponseEntity.ok(departments);
 	}
 
-	@GetMapping(value="/{id}")
+	@GetMapping(value="/city/{id}")
 	public ResponseEntity<City> GetCityById(
-			@RequestParam (name="id", required = true) Long id)
+			@PathVariable (name="id") Long id)
 	{
 		City city = geographyService.getCityById(id);
 		if (city == null) {
