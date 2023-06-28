@@ -28,9 +28,9 @@ public class PersonController {
 	private PersonService personService;
 	@Autowired
 	private IGeographyClient geographyclient;
-	
+
 	@GetMapping()
-	public ResponseEntity<List<Person>> getAll(){
+	public ResponseEntity<List<Person>> getAll() {
 		List<Person> persons = personService.getAllPerson();
 		if (persons.isEmpty()) {
 			return ResponseEntity.noContent().build();
@@ -38,69 +38,66 @@ public class PersonController {
 
 		return ResponseEntity.ok(persons);
 	}
-	
-	@GetMapping(value="/{id}")
-	public ResponseEntity<Person> getById(@PathVariable("id") Long id) {
+
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<Person> getById(@PathVariable Long id) {
 		Person person = personService.getById(id);
-		
+
 		if (person == null) {
 			return ResponseEntity.noContent().build();
 		}
 
 		person.setCity(getCityById(person.getIdCity()));
-		
+
 		return ResponseEntity.ok(person);
 	}
-	
+
 	@PostMapping
 	public Person createPerson(@RequestBody Person person) {
 		return personService.mergePerson(person);
 	}
-	
-	@PutMapping(value="/{id}")
-	public Person updatePerson(@PathVariable("id") Long id, @RequestBody Person person) {
+
+	@PutMapping(value = "/{id}")
+	public Person updatePerson(@PathVariable Long id, @RequestBody Person person) {
 		person.setId(id);
 		return personService.mergePerson(person);
 	}
-	
-	@DeleteMapping(value="/{id}")
-	public void deletePerson(@PathVariable("id") Long id) {
+
+	@DeleteMapping(value = "/{id}")
+	public void deletePerson(@PathVariable Long id) {
 		personService.deletePerson(id);
 	}
-	
+
 	@CircuitBreaker(name = "fastrequest", fallbackMethod = "fallbackCity")
 	private City getCityById(Long id) {
 		try {
-		City city = geographyclient.GetCityById(id);
-		return city;
+			City city = geographyclient.GetCityById(id);
+			return city;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
-	private ResponseEntity<City> fallbackCity(
-			Long id, RuntimeException exeption ) {
+
+	private ResponseEntity<City> fallbackCity(Long id, RuntimeException exeption) {
 		return new ResponseEntity("No data in service", HttpStatus.OK);
 	}
-	
-	@GetMapping(value="/city/{id}")
+
+	@GetMapping(value = "/city/{id}")
 	@CircuitBreaker(name = "fastrequest", fallbackMethod = "fallbackCity2")
-	public ResponseEntity<City> getCityByRestId(@PathVariable("id") Long id) {
-		City city = geographyclient.GetCityById(id);;
-		
+	public ResponseEntity<City> getCityByRestId(@PathVariable Long id) {
+		City city = geographyclient.GetCityById(id);
+		;
+
 		if (city == null) {
 			return ResponseEntity.noContent().build();
 		}
-		
+
 		return ResponseEntity.ok(city);
 	}
-	
-	private ResponseEntity<City> fallbackCity2(
-			@PathVariable("id") Long id, RuntimeException exeption ) {
+
+	private ResponseEntity<City> fallbackCity2(@PathVariable Long id, RuntimeException exeption) {
 		return new ResponseEntity("No data in service", HttpStatus.OK);
 	}
-	
-	
 
 }

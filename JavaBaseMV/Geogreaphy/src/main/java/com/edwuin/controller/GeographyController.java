@@ -28,9 +28,9 @@ public class GeographyController {
 	
 	@GetMapping()
 	public ResponseEntity<List<Department>> GetAllDepartments(
-			@RequestParam (name="page", required = false, defaultValue="10") int page,
-			@RequestParam (name="take", required = false, defaultValue="10") int take,
-			@RequestParam (name="ids", required = false, defaultValue="") String ids)
+            @RequestParam(required = false, defaultValue = "10") int page,
+            @RequestParam(required = false, defaultValue = "10") int take,
+            @RequestParam(required = false, defaultValue = "") String ids)
 	{
 		List<Department> departments = geographyService.getAllDepartments();
 		if (departments.isEmpty()) {
@@ -42,7 +42,7 @@ public class GeographyController {
 
 	@GetMapping(value="/city/{id}")
 	public ResponseEntity<City> GetCityById(
-			@PathVariable (name="id") Long id)
+            @PathVariable Long id)
 	{
 		City city = geographyService.getCityById(id);
 		if (city == null) {

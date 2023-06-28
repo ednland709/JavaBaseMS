@@ -2,7 +2,7 @@ package com.edwuin.model;
 
 import java.io.Serializable;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 import lombok.*;
 

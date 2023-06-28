@@ -9,6 +9,6 @@ import com.edwuin.model.City;
 @FeignClient(name="geography-microservice", path="/geography")
 public interface IGeographyClient {
 	@GetMapping(value="/city/{id}")
-	public City GetCityById(@PathVariable (name="id") Long id);
+	public City GetCityById(@PathVariable Long id);
 
 }
